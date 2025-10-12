@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAOS</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --md-primary: #2196F3; /* 更清爽的蓝色 */
+            --md-primary-light: #64B5F6;
+            --md-primary-dark: #1976D2;
+            --md-on-primary: #FFFFFF;
+            --md-secondary: #03A9F4;
+            --md-on-secondary: #FFFFFF;
+            --md-surface: #FFFFFF;
+            --md-on-surface: #212121;
+            --md-background: #F5F9FF; /* 非常淡的蓝色背景 */
+            --md-on-background: #212121;
+            --md-error: #B00020;
+            --md-on-error: #FFFFFF;
+            --md-outline: #E3F2FD; /* 淡蓝色轮廓 */
+        }
+        
+        /* 深色主题变量 */
+        [data-theme="dark"] {
+            --md-primary: #64B5F6;
+            --md-primary-light: #90CAF9;
+            --md-primary-dark: #42A5F5;
+            --md-on-primary: #000000;
+            --md-surface: #121212;
+            --md-on-surface: #E3F2FD;
+            --md-background: #0A1929;
+            --md-on-background: #E3F2FD;
+            --md-outline: #1E3A5F;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--md-background);
+            color: var(--md-on-background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+        }
+        
+        .festival-greeting {
+            background-color: var(--md-primary); /* 纯蓝色背景 */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+            margin-bottom: 16px;
+            max-width: 80%;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--md-on-background);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+        
+        [data-theme="dark"] .theme-toggle:hover {
+            background-color: rgba(100, 181, 246, 0.1);
+        }
+        
+        .card {
+            background-color: var(--md-surface);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(33, 150, 243, 0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--md-outline);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        h1 {
+            font-size: 36px;
+            font-weight: 500;
+            color: var(--md-primary);
+            margin-bottom: 16px;
+            transition: color 0.3s;
+        }
+        
+        .description {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            color: var(--md-on-surface);
+            transition: color 0.3s;
+        }
+        
+        .image-gallery {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gallery-item.small {
+            width: 25%;
+            max-width: 120px;
+        }
+        
+        .gallery-item.medium {
+            width: 40%;
+            max-width: 200px;
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .update-card {
+            background-color: #f8f9fa; /* 白灰色背景 */
+            color: #495057; /* 深灰色文字 */
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 1px solid #e9ecef;
+        }
+        
+        [data-theme="dark"] .update-card {
+            background-color: #2d3748; /* 深色主题下的深灰色 */
+            color: #e2e8f0; /* 深色主题下的浅灰色文字 */
+            border: 1px solid #4a5568;
+        }
+        
+        .update-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .update-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--md-primary);
+        }
+        
+        [data-theme="dark"] .update-title {
+            color: var(--md-primary-light);
+        }
+        
+        .update-list {
+            list-style-type: none;
+            text-align: center;
+        }
+        
+        .update-list li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .feature-card {
+            background-color: #f8f9fa; /* 白灰色背景 */
+            color: #495057; /* 深灰色文字 */
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 1px solid #e9ecef;
+        }
+        
+        [data-theme="dark"] .feature-card {
+            background-color: #2d3748; /* 深色主题下的深灰色 */
+            color: #e2e8f0; /* 深色主题下的浅灰色文字 */
+            border: 1px solid #4a5568;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 16px;
+            color: var(--md-primary);
+        }
+        
+        [data-theme="dark"] .feature-title {
+            color: var(--md-primary-light);
+        }
+        
+        .feature-item {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .feature-item-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--md-primary-dark);
+        }
+        
+        [data-theme="dark"] .feature-item-title {
+            color: var(--md-primary-light);
+        }
+        
+        .feature-item-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--md-on-surface);
+        }
+        
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+        
+        .md-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 24px;
+            border-radius: 50px; /* 50dp 完全椭圆 */
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .md-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: currentColor;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .md-button:hover:before {
+            opacity: 0.08;
+        }
+        
+        .md-button:active:before {
+            opacity: 0.16;
+        }
+        
+        .filled-button {
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
+        
+        .filled-button:hover {
+            background-color: var(--md-primary-light);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--md-on-surface);
+            opacity: 0.7;
+            transition: color 0.3s;
+        }
+        
+        /* 图片模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #000000; /* 黑色图标 */
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9); /* 白色背景确保黑色图标可见 */
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 600px) {
+            .card {
+                padding: 24px 16px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .description {
+                font-size: 14px;
+            }
+            
+            .update-card, .feature-card {
+                padding: 16px;
+            }
+            
+            .image-gallery {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .gallery-item.small, .gallery-item.medium {
+                width: 80%;
+                max-width: 250px;
+            }
+            
+            .festival-greeting {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 节日祝福显示区域 -->
+        <div id="festivalGreeting" class="festival-greeting"></div>
+        
+        <!-- 深色模式切换按钮 -->
+        <button class="theme-toggle" id="themeToggle">
+            <span class="material-icons">dark_mode</span>
+        </button>
+        
+        <div class="card">
+            <div class="header">
+                <h1>CAOS</h1>
+                <p class="description">CAOS是基于VMOSPro Android9的简ROM，当前已经更新到3.0。欢迎下载体验</p>
+            </div>
+            
+            <!-- 图片展示区域 -->
+            <div class="image-gallery">
+                <div class="gallery-item small" onclick="openModal('Function_display_1.png')">
+                    <img src="Function_display_1.png" alt="功能展示 1" class="gallery-image">
+                </div>
+                <div class="gallery-item medium" onclick="openModal('Function_display_2.png')">
+                    <img src="Function_display_2.png" alt="功能展示 2" class="gallery-image">
+                </div>
+                <div class="gallery-item small" onclick="openModal('Function_display_3.png')">
+                    <img src="Function_display_3.png" alt="功能展示 3" class="gallery-image">
+                </div>
+            </div>
+            
+            <!-- 更新内容卡片 - 白灰色 -->
+            <div class="update-card">
+                <div class="update-title">本次更新内容</div>
+                <ul class="update-list">
+                    <li>1. 图标更新(采用了多彩的图标)</li>
+                    <li>2. 系统流畅度更新</li>
+                    <li>3. 增加了一些有趣的彩蛋</li>
+                    <li>4. 应用主题配色更新</li>
+                </ul>
+            </div>
+            
+            <!-- 特性卡片 -->
+            <div class="feature-card">
+                <div class="feature-title">CAOS 特性</div>
+                <div class="feature-item">
+                    <div class="feature-item-title">·安全</div>
+                    <div class="feature-item-description">隔离的安全环境，随时随地保护您的隐私！</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-title">·持续更新</div>
+                    <div class="feature-item-description">可在"CAOS社区"或"CAOS官网"查看</div>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <a href="https://b23.tv/OYDTKtv" class="md-button filled-button">功能展示</a>
+                <a href="https://www.123912.com/s/v8J3vd-buCgh" class="md-button filled-button">下载最新ROM</a>
+                <a href="https://www.123912.com/s/v8J3vd-euCgh" class="md-button filled-button">下载历史ROM</a>
+                <a href="https://www.123912.com/s/v8J3vd-tuCgh" class="md-button filled-button">下载VMOS Pro破解版</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            CAOS Project 2023-2025
+        </div>
+    </div>
+
+    <!-- 图片模态框 -->
+    <div id="imageModal" class="modal">
+        <button class="close" onclick="closeModal()">
+            <span class="material-icons">close</span>
+        </button>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // 节日祝福功能
+        function getFestivalGreeting() {
+            const now = new Date();
+            const month = now.getMonth() + 1; // 月份从0开始，所以+1
+            const date = now.getDate();
+            
+            // 定义节日日期和祝福语
+            const festivals = [
+                { month: 1, date: 1, greeting: "CAmgz祝你元旦快乐！" },
+                { month: 1, date: 15, greeting: "CAmgz祝你元宵节快乐！" },
+                { month: 2, date: 14, greeting: "CAmgz祝你情人节快乐！" },
+                { month: 3, date: 8, greeting: "CAmgz祝你妇女节快乐！" },
+                { month: 4, date: 1, greeting: "CAmgz祝你愚人节快乐！" },
+                { month: 4, date: 4, greeting: "今天是清明节。" },
+                { month: 5, date: 1, greeting: "CAmgz祝你劳动节快乐！" },
+                { month: 5, date: 4, greeting: "CAmgz祝你青年节快乐！" },
+                { month: 6, date: 1, greeting: "CAmgz祝你儿童节快乐！" },
+                { month: 7, date: 1, greeting: "CAmgz祝你建党节快乐！" },
+                { month: 8, date: 1, greeting: "CAmgz祝你建军节快乐！" },
+                { month: 8, date: 15, greeting: "今天是中元节。" },
+                { month: 9, date: 10, greeting: "CAmgz祝你教师节快乐！" },
+                { month: 10, date: 1, greeting: "CAmgz祝你国庆节快乐！" },
+                { month: 12, date: 24, greeting: "CAmgz祝你平安夜快乐！" },
+                { month: 12, date: 25, greeting: "CAmgz祝你圣诞节快乐！" }
+            ];
+            
+            // 农历节日（简化处理，使用固定公历日期）
+            const lunarFestivals = [
+                { month: 1, date: 1, greeting: "CAmgz祝你春节快乐！" }, // 农历正月初一（简化为公历1月1日）
+                { month: 5, date: 5, greeting: "CAmgz祝你端午节快乐！" }, // 农历五月初五（简化为公历5月5日）
+                { month: 8, date: 15, greeting: "CAmgz祝你中秋节快乐！" }, // 农历八月十五（简化为公历8月15日）
+                { month: 9, date: 9, greeting: "CAmgz祝你重阳节快乐！" } // 农历九月初九（简化为公历9月9日）
+            ];
+            
+            // 检查是否是节日
+            for (const festival of [...festivals, ...lunarFestivals]) {
+                if (festival.month === month && festival.date === date) {
+                    return festival.greeting;
+                }
+            }
+            
+            return null;
+        }
+        
+        // 显示节日祝福
+        function displayFestivalGreeting() {
+            const greetingElement = document.getElementById('festivalGreeting');
+            const greeting = getFestivalGreeting();
+            
+            if (greeting) {
+                greetingElement.textContent = greeting;
+                greetingElement.style.display = 'block';
+            } else {
+                greetingElement.style.display = 'none';
+            }
+        }
+        
+        // 深色模式切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.material-icons');
+        
+        // 检查本地存储的主题偏好
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            themeIcon.textContent = theme === 'light' ? 'dark_mode' : 'light_mode';
+        }
+        
+        // 添加按钮涟漪效果
+        document.querySelectorAll('.md-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.7);
+                    transform: scale(0);
+                    animation: ripple-animation 0.6s linear;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    pointer-events: none;
+                `;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // 图片模态框功能
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        
+        function openModal(imgSrc) {
+            modal.style.display = 'flex';
+            modalImg.src = imgSrc;
+        }
+        
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        
+        // 点击模态框背景关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // 初始化节日祝福
+        displayFestivalGreeting();
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-animation {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
